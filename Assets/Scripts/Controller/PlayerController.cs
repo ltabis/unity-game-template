@@ -4,19 +4,9 @@ using UnityEngine;
 
 public class PlayerController : Entity
 {
-    public  Camera     playerCamera;
-    private Transform  cameraTransform;
-
-    private float yaw = .0f;
-    private float pitch = .0f;
-
-    private Vector2 _mouseSensibility = new Vector2(1, -1);
-
     void Start()
     {
         _velocity = 5;
-
-        cameraTransform = GetComponent<Transform>();
     }
 
     // Update is called once per frame
@@ -26,7 +16,6 @@ public class PlayerController : Entity
         float y = Input.GetAxis("Vertical");
 
         ComputeMovementControls(x, y);
-        ComputeCameraControls();
     }
 
     // Moving the player along the x y axis.
@@ -36,14 +25,5 @@ public class PlayerController : Entity
         {
             transform.position += new Vector3(x * _velocity * Time.deltaTime, 0, y * _velocity * Time.deltaTime);
         }
-    }
-
-    // Rotate the camera of the player.
-    void ComputeCameraControls()
-    {
-        yaw += _mouseSensibility.x * Input.GetAxis("Mouse X");
-        pitch += _mouseSensibility.y * Input.GetAxis("Mouse Y");
-
-        transform.eulerAngles = new Vector3(pitch, yaw, .0f);
     }
 }
