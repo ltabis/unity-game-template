@@ -4,26 +4,44 @@ using UnityEngine;
 
 public class PlayerController : Entity
 {
+    // Camera elements.
+    public  Camera     playerCamera;
+    private Transform  playerCameraTransform;
+
     void Start()
     {
         _velocity = 5;
+
+        playerCameraTransform = playerCamera.GetComponent<Transform>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        float x = Input.GetAxis("Horizontal");
-        float y = Input.GetAxis("Vertical");
-
-        ComputeMovementControls(x, y);
+        ComputeMovementControls();
     }
 
     // Moving the player along the x y axis.
-    void ComputeMovementControls(float x, float y)
+    void ComputeMovementControls()
     {
-        if (x != 0 || y != 0)
+        // Move the body following the camera angle.
+        transform.eulerAngles = new Vector3(.0f, playerCameraTransform.eulerAngles.y, .0f);
+
+        if (Input.GetButton("Forward"))
         {
-            transform.position += new Vector3(x * _velocity * Time.deltaTime, 0, y * _velocity * Time.deltaTime);
+            transform.position += transform.forward * _velocity * Time.deltaTime;
+        }
+        if (Input.GetButton("Backward"))
+        {
+            transform.position += transform.forward * _velocity * Time.deltaTime * -1;
+        }
+        if (Input.GetButton("Right"))
+        {
+            transform.position += transform.right * _velocity * Time.deltaTime;
+        }
+        if (Input.GetButton("Left"))
+        {
+            transform.position += transform.right * _velocity * Time.deltaTime * -1;
         }
     }
 }
