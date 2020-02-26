@@ -7,9 +7,14 @@ public class PlayerController : Entity
     public  Camera     playerCamera;
     private Transform  cameraTransform;
 
+    private float yaw = .0f;
+    private float pitch = .0f;
+
+    private Vector2 _mouseSensibility = new Vector2(1, -1);
+
     void Start()
     {
-        _velocity = 2;
+        _velocity = 5;
 
         cameraTransform = GetComponent<Transform>();
     }
@@ -17,30 +22,28 @@ public class PlayerController : Entity
     // Update is called once per frame
     void Update()
     {
-        ComputeMovementControls();
-        // ComputeCameraControls();
-    }
-
-    // Moving the player with axis controls.
-    void ComputeMovementControls()
-    {
         float x = Input.GetAxis("Horizontal");
         float y = Input.GetAxis("Vertical");
 
+        ComputeMovementControls(x, y);
+        ComputeCameraControls();
+    }
+
+    // Moving the player along the x y axis.
+    void ComputeMovementControls(float x, float y)
+    {
         if (x != 0 || y != 0)
         {
             transform.position += new Vector3(x * _velocity * Time.deltaTime, 0, y * _velocity * Time.deltaTime);
         }
     }
 
+    // Rotate the camera of the player.
     void ComputeCameraControls()
     {
-        Vector3 cameraDirection = new Vector3(cameraTransform.forward.x, 0f, cameraTransform.forward.z);
-        Vector3 playerDirection = new Vector3(_velocity, 0f, _velocity);
+        yaw += _mouseSensibility.x * Input.GetAxis("Mouse X");
+        pitch += _mouseSensibility.y * Input.GetAxis("Mouse Y");
 
-        if (Vector3.Angle(cameraDirection, playerDirection) > 15f)
-        {
-            transform.rotation = Quaternion.RotateTowards(transform.rotation, transform.rotation, 15f);
-        }
+        transform.eulerAngles = new Vector3(pitch, yaw, .0f);
     }
 }
